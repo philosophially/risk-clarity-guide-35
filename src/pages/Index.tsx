@@ -98,71 +98,125 @@ const ContractReviewPage: React.FC = () => {
                   className="flex-1 p-0 m-0 overflow-auto"
                 >
                   <div className="p-6">
-                    {/* Playbook collapsible sections by risk level */}
-                    {["high", "medium", "low"].map((risk) => {
-                      const riskIssues = issuesData.filter(
-                        (issue) => issue.riskLevel === risk
-                      );
-                      if (riskIssues.length === 0) return null;
-                      const riskLabel =
-                        risk === "high"
-                          ? "High Risk Recommended Actions"
-                          : risk === "medium"
-                          ? "Medium Risk Recommended Actions"
-                          : "Low Risk Recommended Actions";
-                      return (
-                        <div key={risk} className="mb-6">
-                          <details open>
-                            <summary className="font-semibold text-base cursor-pointer mb-2">
-                              {riskLabel} ({riskIssues.length})
-                            </summary>
-                            <div className="space-y-4">
-                              {riskIssues.map((issue) => (
-                                <div
-                                  key={issue.id}
-                                  className="bg-white rounded shadow p-4 border"
-                                >
-                                  <div className="flex items-center mb-1">
-                                    <span
-                                      className={`risk-badge-${issue.riskLevel} mr-2`}
-                                    >
-                                      {issue.riskLevel === "high"
-                                        ? "High Risk"
-                                        : issue.riskLevel === "medium"
-                                        ? "Medium Risk"
-                                        : "Low Risk"}
-                                    </span>
-                                    <span className="font-medium">
-                                      {issue.title}
-                                    </span>
-                                  </div>
-                                  <div className="text-xs text-slate-500 mb-2">
-                                    {issue.location}
-                                  </div>
-                                  <div className="mb-2">
-                                    <span className="font-semibold text-sm">
-                                      Playbook Position:
-                                    </span>
-                                    <div className="bg-blue-50 p-2 rounded border border-blue-100 text-sm mt-1">
-                                      {issue.playbookPosition}
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <span className="font-semibold text-sm">
-                                      Recommended Action:
-                                    </span>
-                                    <div className="bg-green-50 p-2 rounded border border-green-100 text-sm mt-1">
-                                      Request modification based on playbook
-                                      position.
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </details>
+                    {activeIssue ? (
+                      <div>
+                        <button
+                          className="text-blue-600 hover:underline mb-4 flex items-center"
+                          onClick={() => setActiveIssueId(null)}
+                        >
+                          &lt; Back to all recommendations
+                        </button>
+                        <h2 className="text-xl font-bold text-slate-800 mb-2">
+                          {activeIssue.title}
+                        </h2>
+                        <span
+                          className={`risk-badge-${activeIssue.riskLevel} mb-4 inline-block`}
+                        >
+                          {activeIssue.riskLevel === "high"
+                            ? "High Risk"
+                            : activeIssue.riskLevel === "medium"
+                            ? "Medium Risk"
+                            : "Low Risk"}
+                        </span>
+                        <div className="mb-6">
+                          <h3 className="text-sm font-semibold text-slate-700 mb-1">
+                            Issue Summary
+                          </h3>
+                          <p className="text-slate-600 mb-2">
+                            {activeIssue.summary}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            {activeIssue.location}
+                          </p>
                         </div>
-                      );
-                    })}
+                        <div className="mb-6">
+                          <h3 className="text-sm font-semibold text-slate-700 mb-2">
+                            Playbook Position
+                          </h3>
+                          <div className="bg-blue-50 p-4 rounded border border-blue-100">
+                            <p className="text-sm">
+                              {activeIssue.playbookPosition}
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-semibold text-slate-700 mb-2">
+                            Recommended Action
+                          </h3>
+                          <div className="bg-green-50 p-4 rounded border border-green-100">
+                            <p className="text-sm">
+                              Request modification based on playbook position.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      ["high", "medium", "low"].map((risk) => {
+                        const riskIssues = issuesData.filter(
+                          (issue) => issue.riskLevel === risk
+                        );
+                        if (riskIssues.length === 0) return null;
+                        const riskLabel =
+                          risk === "high"
+                            ? "High Risk Recommended Actions"
+                            : risk === "medium"
+                            ? "Medium Risk Recommended Actions"
+                            : "Low Risk Recommended Actions";
+                        return (
+                          <div key={risk} className="mb-6">
+                            <details open>
+                              <summary className="font-semibold text-base cursor-pointer mb-2">
+                                {riskLabel} ({riskIssues.length})
+                              </summary>
+                              <div className="space-y-4">
+                                {riskIssues.map((issue) => (
+                                  <div
+                                    key={issue.id}
+                                    className="bg-white rounded shadow p-4 border cursor-pointer hover:bg-blue-50"
+                                    onClick={() => setActiveIssueId(issue.id)}
+                                  >
+                                    <div className="flex items-center mb-1">
+                                      <span
+                                        className={`risk-badge-${issue.riskLevel} mr-2`}
+                                      >
+                                        {issue.riskLevel === "high"
+                                          ? "High Risk"
+                                          : issue.riskLevel === "medium"
+                                          ? "Medium Risk"
+                                          : "Low Risk"}
+                                      </span>
+                                      <span className="font-medium">
+                                        {issue.title}
+                                      </span>
+                                    </div>
+                                    <div className="text-xs text-slate-500 mb-2">
+                                      {issue.location}
+                                    </div>
+                                    <div className="mb-2">
+                                      <span className="font-semibold text-sm">
+                                        Playbook Position:
+                                      </span>
+                                      <div className="bg-blue-50 p-2 rounded border border-blue-100 text-sm mt-1">
+                                        {issue.playbookPosition}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold text-sm">
+                                        Recommended Action:
+                                      </span>
+                                      <div className="bg-green-50 p-2 rounded border border-green-100 text-sm mt-1">
+                                        Request modification based on playbook
+                                        position.
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </details>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 </TabsContent>
               </Tabs>
