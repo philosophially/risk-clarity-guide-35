@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { issuesData } from "../../data/issuesData";
 import IssuesList from "./IssuesList";
+import RiskLevel from "./RiskLevel";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 
 interface IssuesSidebarProps {
   onIssueClick: (issueId: string) => void;
@@ -23,46 +30,48 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({
     }
   };
 
-  const highRiskIssues = issuesData.filter(
-    (issue) => issue.riskLevel === "high"
-  );
-  const mediumRiskIssues = issuesData.filter(
-    (issue) => issue.riskLevel === "medium"
-  );
-  const lowRiskIssues = issuesData.filter((issue) => issue.riskLevel === "low");
+  const riskSections = [
+    { level: "high" as const, label: "High Risk Issues" },
+    { level: "medium" as const, label: "Medium Risk Issues" },
+    { level: "low" as const, label: "Low Risk Issues" },
+  ];
 
   return (
     <div className="h-full overflow-auto">
       <div className="p-4">
-        <IssuesList
-          issues={highRiskIssues}
-          title={`High Risk Issues (${highRiskIssues.length})`}
-          onIssueClick={onIssueClick}
-          activeIssueId={activeIssueId}
-          resolvedIssues={resolvedIssues}
-          onResolve={handleResolveIssue}
-          onIssueHover={onIssueHover}
-        />
-
-        <IssuesList
-          issues={mediumRiskIssues}
-          title={`Medium Risk Issues (${mediumRiskIssues.length})`}
-          onIssueClick={onIssueClick}
-          activeIssueId={activeIssueId}
-          resolvedIssues={resolvedIssues}
-          onResolve={handleResolveIssue}
-          onIssueHover={onIssueHover}
-        />
-
-        <IssuesList
-          issues={lowRiskIssues}
-          title={`Low Risk Issues (${lowRiskIssues.length})`}
-          onIssueClick={onIssueClick}
-          activeIssueId={activeIssueId}
-          resolvedIssues={resolvedIssues}
-          onResolve={handleResolveIssue}
-          onIssueHover={onIssueHover}
-        />
+        <Accordion type="multiple" defaultValue={["high", "medium", "low"]}>
+          {riskSections.map(({ level, label }) => {
+            const filtered = issuesData.filter(
+              (issue) => issue.riskLevel === level
+            );
+            if (filtered.length === 0) return null;
+            return (
+              <AccordionItem
+                value={level}
+                key={level}
+                className="mb-2 border rounded"
+              >
+                <AccordionTrigger className="flex items-center gap-2 px-2 py-2 text-base font-semibold">
+                  <RiskLevel level={level} />
+                  <span>
+                    {label} ({filtered.length})
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="pt-2">
+                  <IssuesList
+                    issues={filtered}
+                    title=""
+                    onIssueClick={onIssueClick}
+                    activeIssueId={activeIssueId}
+                    resolvedIssues={resolvedIssues}
+                    onResolve={handleResolveIssue}
+                    onIssueHover={onIssueHover}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
       </div>
     </div>
   );
