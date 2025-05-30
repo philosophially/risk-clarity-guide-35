@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   ThumbsUp,
@@ -86,21 +87,14 @@ const IssueCard: React.FC<IssueCardProps> = ({
             <div className="flex justify-between items-start mb-2 cursor-pointer">
               <div>
                 <h3
-                  className="font-medium text-sm hover:text-blue-600"
+                  className="font-medium text-xs hover:text-blue-600 text-left"
                   onClick={handleIssueClick}
                 >
                   {issue.title}
                 </h3>
-                <p className="text-xs text-slate-500">{issue.location}</p>
+                <p className="text-xs text-slate-500 text-left">{issue.location}</p>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`risk-badge-${issue.riskLevel}`}>
-                  {issue.riskLevel === "high"
-                    ? "High Risk"
-                    : issue.riskLevel === "medium"
-                    ? "Medium Risk"
-                    : "Low Risk"}
-                </span>
                 {isResolved && <Check size={16} className="text-green-600" />}
                 {isExpanded ? (
                   <ChevronDown size={16} />
@@ -112,10 +106,10 @@ const IssueCard: React.FC<IssueCardProps> = ({
           </CollapsibleTrigger>
 
           <CollapsibleContent>
-            <p className="text-sm text-slate-700 mb-3">{issue.summary}</p>
+            <p className="text-xs text-slate-700 mb-3 text-left">{issue.summary}</p>
 
             {isResolved ? (
-              <div className="bg-green-50 border border-green-200 p-2 rounded text-sm text-green-800 flex items-center">
+              <div className="bg-green-50 border border-green-200 p-2 rounded text-xs text-green-800 flex items-center">
                 <Check size={16} className="mr-2" />
                 Issue resolved by John Smith
               </div>
@@ -156,10 +150,10 @@ const IssueCard: React.FC<IssueCardProps> = ({
 
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="playbook" className="border-0">
-                    <AccordionTrigger className="py-1 text-xs text-blue-600 hover:text-blue-800 hover:no-underline">
+                    <AccordionTrigger className="py-1 text-xs text-blue-600 hover:text-blue-800 hover:no-underline text-left">
                       Playbook position
                     </AccordionTrigger>
-                    <AccordionContent className="text-xs bg-blue-50 p-2 rounded border border-blue-100">
+                    <AccordionContent className="text-xs bg-blue-50 p-2 rounded border border-blue-100 text-left">
                       {issue.playbookPosition}
                     </AccordionContent>
                   </AccordionItem>

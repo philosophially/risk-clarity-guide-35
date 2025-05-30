@@ -1,7 +1,7 @@
+
 import React, { useState } from "react";
 import { issuesData } from "../../data/issuesData";
 import IssuesList from "./IssuesList";
-import RiskLevel from "./RiskLevel";
 import {
   Accordion,
   AccordionItem,
@@ -31,16 +31,16 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({
   };
 
   const riskSections = [
-    { level: "high" as const, label: "High Risk Issues" },
-    { level: "medium" as const, label: "Medium Risk Issues" },
-    { level: "low" as const, label: "Low Risk Issues" },
+    { level: "high" as const, label: "High Risk Issues", borderColor: "border-l-red-500" },
+    { level: "medium" as const, label: "Medium Risk Issues", borderColor: "border-l-orange-500" },
+    { level: "low" as const, label: "Low Risk Issues", borderColor: "border-l-green-500" },
   ];
 
   return (
     <div className="h-full overflow-auto">
       <div className="p-4">
         <Accordion type="multiple" defaultValue={["high", "medium", "low"]}>
-          {riskSections.map(({ level, label }) => {
+          {riskSections.map(({ level, label, borderColor }) => {
             const filtered = issuesData.filter(
               (issue) => issue.riskLevel === level
             );
@@ -49,10 +49,9 @@ const IssuesSidebar: React.FC<IssuesSidebarProps> = ({
               <AccordionItem
                 value={level}
                 key={level}
-                className="mb-2 border rounded"
+                className={`mb-2 border rounded border-l-4 ${borderColor}`}
               >
-                <AccordionTrigger className="flex items-center gap-2 px-2 py-2 text-base font-semibold">
-                  <RiskLevel level={level} />
+                <AccordionTrigger className="flex items-center gap-2 px-2 py-2 text-xs font-semibold text-left">
                   <span>
                     {label} ({filtered.length})
                   </span>
